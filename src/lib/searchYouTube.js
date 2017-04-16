@@ -1,19 +1,20 @@
-var searchYouTube = ({query, max, key}, cb) => {
-  let baseURL = 'https://www.googleapis.com/youtube/v3/search?part=snippet&q=';
-  let searchPartURL = `${query}&maxResults=${max}&key=${key}&type=video&videoEmbeddable=true`;
-  let youTubeSearchURL = baseURL + searchPartURL;
+var searchYouTube = ({query, max = 5, key}, cb) => {
 
-  $.ajax({
-    url: youTubeSearchURL,
-    type: 'GET',
+  $.get('https://www.googleapis.com/youtube/v3/search', {
     part: 'snippet',
-    contentType: 'application/json; charset=utf-8'
+    key: key,
+    q: query,
+    maxResults: max,
+    type: 'video',
+    videoEmbeddable: true
   })
-  .done(function(data) {
-    cb(data.items);
+  .done(({items}) => {
+    if (cb) {
+      cb(items);
+    }
   })
-  .fail(function(data) {
-    console.log('error: ', data);
+  .fail(({responseJSON}) => {
+    responseJSON.error.errors.forEach((err) => console.error(error));
   });
 };
 

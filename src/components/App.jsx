@@ -2,9 +2,28 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentVideo: window.exampleVideoData[0]
+      currentVideo: window.exampleVideoData[0],
+      videos: window.exampleVideoData
     };
     this.onVideoClick = this.onVideoClick.bind(this);
+  }
+
+  componentWillMount() {
+    this.getYoutubeVideos('monkey throws racoon into space');
+  }
+
+  getYoutubeVideos(query) {
+    let options = {
+      key: this.props.API_KEY,
+      query: query
+    };
+
+    this.props.searchYoutube(options, (videos) => {
+      this.setState({
+        videos: videos,
+        currentVideo: videos[0]
+      });
+    });
   }
 
   onVideoClick(event) {
